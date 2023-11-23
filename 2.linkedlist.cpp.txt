@@ -1,0 +1,179 @@
+//singlelinkedlist
+#include <iostream>
+#include <string.h>
+using namespace std;
+class node
+{
+public:
+    int value;
+    node *next;
+    // constructor
+    node(int data)
+    {
+        value = data;
+        next = NULL;
+    }
+};
+class linkedlist
+{
+public:
+    node *head;
+    // constructor
+    linkedlist()
+    {
+        head = NULL;
+    }
+    void insertathead(int value)
+    {
+        node *new_node = new node(value);
+        new_node->next = head;
+        head = new_node;
+    } 
+
+    void updateatposition(int value, int k)
+    {
+        node *temp = head;
+        int curr_pos = 0;
+        while (curr_pos != k)
+        {
+            temp = temp->next;
+            curr_pos++;
+        }
+        // at kth node
+        temp->value = value;
+    }
+    void insetatposition(int value, int pos)
+    {
+        node *new_node = new node(value);
+        node *temp = head;
+        int curr_pos = 0;
+        while (curr_pos != pos - 1)
+        {
+            temp = temp->next;
+            curr_pos++;
+        }
+        new_node->next = temp->next;
+        temp->next = new_node;
+    }
+    void insertattail(int value)
+    {
+        node *new_node = new node(value);
+        node *temp = head;
+        while (temp->next != NULL)
+        {
+            temp = temp->next;
+        }
+        // now at last node
+        temp->next = new_node;
+        
+    }
+    void deleteathead()
+    {
+        node *temp = head;
+        head = temp->next;
+        free(temp);
+    }
+    void deleteattail()
+    {
+
+        node *second_last = head;
+        while (second_last->next->next != NULL)
+        {
+            second_last = second_last->next;
+        }
+        // we are at second last node
+        node *temp = second_last->next; // node to be deleted
+        second_last->next = NULL;
+        free(temp);
+    }
+    void deleteatposition(int pos)
+    {
+        if (pos == 0)
+        {
+            deleteathead();
+            return;
+        }
+        node *prev = head;
+        int curr_pos = 0;
+        while (curr_pos != pos - 1)
+        {
+            prev = prev->next;
+            curr_pos++;
+        }
+        // prev at pos-1
+        node *temp = prev->next;
+        prev->next = prev->next->next;
+        free(temp);
+    }
+void search(int value)
+    {   int flag=0;
+        int count = 0;
+        node *temp = head;
+        while (temp != NULL)
+        {  
+            if (temp->value == value)
+            {
+                cout << "The value is found in linked list at index position " << count;
+                flag=1;
+                break;
+            }
+            temp = temp->next;
+            count++;
+        }
+       if(flag==0) cout<<"Element not found "<<endl;
+    }
+    void reverselist()
+    {
+        node* prev=NULL;
+        node* next=NULL;
+        node* curr=head;
+        while(curr!=NULL)
+        {
+            next=curr->next;
+            curr->next=prev;
+            prev=curr;
+            curr=next;
+        }
+        head=prev;
+        return ;
+    }
+    void display()
+    {
+        node *temp = head;
+        while (temp != NULL)
+        {
+            cout << temp->value << "->";
+            temp = temp->next;
+        }
+        // temp is null
+        cout << "NULL " << endl;
+    }
+};
+int main()
+{
+    
+    linkedlist ll;
+   
+    ll.insertathead(3);
+    ll.display();
+    ll.insertathead(4);
+    ll.display();
+    ll.insertathead(1);
+    ll.insertathead(5);
+    ll.display();
+    ll.updateatposition(7, 1);
+    ll.display();
+    ll.insertattail(6);
+    ll.display();
+    ll.deleteathead();
+    ll.display();
+    ll.deleteattail();
+    ll.display();
+    ll.deleteatposition(0);
+    ll.display();
+  
+    ll.search(1);
+    ll.reverselist();
+    ll.display();
+    
+}

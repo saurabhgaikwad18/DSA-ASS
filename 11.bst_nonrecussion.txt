@@ -1,0 +1,193 @@
+// Non recursive
+
+#include <iostream>
+#include <stack>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int d) {
+        data = d;
+        left = NULL;
+        right = NULL;
+    }
+};
+
+Node* insert(Node* root, int data) {
+    if (root == NULL) {
+        return new Node(data);
+    }
+
+    Node* current = root;
+    while (true) {
+        if (data > current->data) {
+            if (current->right == NULL) {
+                current->right = new Node(data);
+                break;
+            } else {
+                current = current->right;
+            }
+        } else if (data < current->data) {
+            if (current->left == NULL) {
+                current->left = new Node(data);
+                break;
+            } else {
+                current = current->left;
+            }
+        } else {
+            // data already exists, do nothing
+            break;
+        }
+    }
+
+    return root;
+}
+
+void inorder(Node* root) {
+    stack<Node*> s;
+    Node* current = root;
+
+    while (current != NULL || !s.empty()) {
+        while (current != NULL) {
+            s.push(current);
+            current = current->left;
+        }
+
+        current = s.top();
+        s.pop();
+
+        cout << current->data << " ";
+
+        current = current->right;
+    }
+}
+
+bool search(Node* root, int key) {
+    Node* current = root;
+    while (current != NULL) {
+        if (key == current->data) {
+            return true;
+        } else if (key > current->data) {
+            current = current->right;
+        } else {
+            current = current->left;
+        }
+    }
+    return false;
+}
+
+Node* inOrderSuccessor(Node* root) {
+    if (root == NULL) {
+        return NULL;
+    }
+
+    while (root->left != NULL) {
+        root = root->left;
+    }
+
+    return root;
+}
+
+Node* Delete(Node* root, int key) {
+    Node* current = root;
+    Node* parent = NULL;
+
+    while (current != NULL && current->data != key) {
+        parent = current;
+        if (key > current->data) {
+            current = current->right;
+        } else {
+            current = current->left;
+        }
+    }
+
+    if (current == NULL) {
+        // Key not found
+        return root;
+    }
+
+    if (current->left == NULL) {
+        Node* temp = current->right;
+        delete current;
+        if (parent == NULL) {
+            return temp;
+        }
+        if (parent->left == current) {
+            parent->left = temp;
+        } else {
+            parent->right = temp;
+        }
+    } else if (current->right == NULL) {
+        Node* temp = current->left;
+        delete current;
+        if (parent == NULL) {
+            return temp;
+        }
+        if (parent->left == current) {
+            parent->left = temp;
+        } else {
+            parent->right = temp;
+        }
+    } else {
+        Node* successor = inOrderSuccessor(current->right);
+        current->data = successor->data;
+        current->right = Delete(current->right, successor->data);
+    }
+
+    return root;
+}
+
+int main() {
+    Node* root = NULL;
+    int choice, data;
+
+    do {
+        cout << "\n1. Insert\n2. Search\n3. Delete\n4. Inorder Traversal\n0. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "Enter data to insert: ";
+                cin >> data;
+                root = insert(root, data);
+                break;
+
+            case 2:
+                cout << "Enter key to search: ";
+                cin >> data;
+                if (search(root, data)) {
+                    cout << "The data is present." << endl;
+                } else {
+                    cout << "The data is not present." << endl;
+                }
+                break;
+
+            case 3:
+                cout << "Enter key to delete: ";
+                cin >> data;
+                root = Delete(root, data);
+                break;
+
+            case 4:
+                cout << "Inorder Traversal: ";
+                inorder(root);
+                cout << endl;
+                break;
+
+            case 0:
+                cout << "Exiting program.\n";
+                break;
+
+            default:
+                cout << "Invalid choice. Try again.\n";
+                break;
+        }
+    } while (choice != 0);
+
+    return 0;
+}

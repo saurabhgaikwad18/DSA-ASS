@@ -1,0 +1,134 @@
+// infix to postfix using stack
+#include <iostream>
+using namespace std;
+class node
+{
+    public:
+    char value;
+    node* next;
+    node(char data)
+    {
+    value=data;
+    next=NULL;
+    }
+};
+class Stack
+{
+    public:
+    int capacity;
+    int curr_size;
+    node* head;
+    Stack(int c)
+    {
+        capacity=c;
+        curr_size=0;
+        head=NULL;
+    }
+    void push(char value)            //insert at head
+    {
+        if(curr_size==capacity)
+        {
+            cout<<"Overflow "<<endl;
+            return;
+        }
+       
+        node* new_node=new node(value);
+        new_node->next=head;
+        head=new_node;
+        curr_size++;
+        return;
+    }
+    void pop()                     //delete at head
+    {
+        if(curr_size==0)
+        {
+            cout<<"Underflow"<<endl;
+            return;
+        }
+        node* temp=head;
+        head=head->next;
+        free(temp);
+        curr_size--;
+        return;
+    }
+    bool empty()
+    {
+        return head==NULL;
+    }
+    bool isfull()
+    {
+        return curr_size==capacity;
+    }
+    char top()
+    {
+        if(head==NULL)
+        {
+            cout<<"Underflow";
+            return 'x';
+        }
+        return head->value;
+    }
+    int getsize()
+    {
+        return curr_size;
+    }
+};
+
+int prec(char c)
+{
+    if (c == '^')
+        return 3;
+    else if (c == '*' || c == '/')
+        return 2;
+    else if (c == '+' || c == '-')
+        return 1;
+    else
+        return -1; // when it is not operator which means when there is opening bracket
+}
+string infixtopostfix(string s)
+{
+    Stack st(10);
+    string res = "";
+    for (int i = 0; i < s.length(); i++)
+    {
+        if ((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z')) // if it is a operand
+        {
+            res += s[i];
+        }
+        else if (s[i] == '(')
+            st.push(s[i]); // when it is opening bracket push directly
+        else if (s[i] == ')')
+        {   
+            while (!st.empty() && st.top() != '(')
+            {
+                res += st.top();
+                st.pop();
+            }
+            if (!st.empty())
+            {
+                st.pop(); // aplyala open (  bracket print nahi karaycha fakt pop karaychay
+            }
+        }
+        else
+        { // operators
+            while (!st.empty() && prec(st.top()) > prec(s[i]))
+            {
+                res += st.top();
+                st.pop();
+            }
+            st.push(s[i]); // while loop totala and prec of incoming is more than top
+        }
+    }
+    // at last add all remaining elements in stack to result
+    while (!st.empty())
+    {
+        res = res + st.top();
+        st.pop();
+    }
+    return res;
+}
+int main()
+{
+    
+    cout << infixtopostfix("(a-b/c)*(a/k-l)");
+}

@@ -1,0 +1,53 @@
+#include<iostream>
+#include<unordered_map>
+#include<list>
+using namespace std;
+class graph
+{
+    unordered_map<int,list<int>> l;
+    public:
+    void addedge(int u,int v,bool direction)
+    {
+        l[u].push_back(v);
+        if(direction==0)
+        {
+            l[v].push_back(u);
+        }
+    }
+    void dfshelper(int src,unordered_map<int,bool> &visited)
+    {
+        //recursive function that will traverse graph
+        cout<<src<<" ";
+        visited[src]=true;
+        //go to one by one all neighbours which are not visited
+        for(auto i:l[src])
+        {
+            if(visited[i]!=true)
+            {
+                dfshelper(i,visited);
+            }
+        }
+    }
+    void dfs(int src)
+    {
+      unordered_map<int,bool> visited;  //initialize all visited by false
+      for(auto p:l)
+      {
+        int node=p.first;
+        visited[node]=false;
+      }
+      //ekdach initialize karaychay mhanun helper function lavlay
+      dfshelper(src,visited);
+    }
+};
+int main()
+{
+     graph g; 
+      
+    g.addedge(0,1,0);
+    g.addedge(1,2,0);
+    g.addedge(2,3,0);
+    g.addedge(3,4,0);
+    g.addedge(4,5,0);
+    g.dfs(0);
+}

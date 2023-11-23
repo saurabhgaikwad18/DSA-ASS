@@ -1,0 +1,160 @@
+//using recursion...
+
+#include <iostream>
+using namespace std;
+class Treenode
+{
+public:
+    int val;
+    Treenode *left;
+    Treenode *right;
+    Treenode(int data)
+    {
+        val = data;
+        left = NULL;
+        right = NULL;
+    }
+};
+void insert(Treenode *&root, int val)
+{
+    // base case
+    if (root == NULL)
+    {
+        root = new Treenode(val);
+        return;
+    }
+    else if (root->val < val) // go right
+    {
+        if (root->right == NULL)
+        {
+            root->right = new Treenode(val);
+        }
+        else
+        {
+            insert(root->right, val);
+        }
+    }
+    else // root->val>val
+    {
+        if (root->left == NULL)
+        {
+            root->left = new Treenode(val);
+        }
+        else
+        {
+            insert(root->left, val);
+        }
+    }
+}
+Treenode *insertbst(Treenode *&root, int val)
+{
+    insert(root, val);
+
+    return root;
+}
+void display(Treenode *&root)
+{
+    // inorder
+    if(root==NULL) return;
+    display(root->left);  // left
+    cout << root->val<<" ";    // work
+    display(root->right); // right
+}
+bool search(Treenode* &root,int val)
+{
+   
+    if(root==NULL) 
+    {
+        return false;
+    }
+    else if (root->val==val)
+    {
+       
+        return true;
+    }
+    else if(root->val < val)
+    {
+        search(root->right,val);
+    }
+    else //root->val>val
+    {
+        search(root->left,val);
+    }
+    
+}
+Treenode* iop(Treenode*root) //inorder predessor
+{
+      Treenode* pred=root->left;
+      while(pred->right!=NULL)
+      {
+        pred=pred->right;
+      }
+      return pred;
+}
+Treenode* deletenode(Treenode* root,int key)
+{
+    if(root==NULL) return NULL;
+    if(root->val ==key)
+    {
+        //case 1- no child nodes 
+        if(root->left==NULL && root->right==NULL)
+        {
+            return NULL;  //null will be written and automatically deleted
+
+        }
+        //case 2 -1 child node
+        if(root->left==NULL || root->right==NULL)
+        {
+            if(root->left!=NULL)
+            {
+                return root->right;
+            }
+            else if(root->right!=NULL)
+            {
+                return root->left;
+            }
+        }
+        //case 3 -2 child nodes exist
+        if(root->left!=NULL && root->right!=NULL)
+        {
+            Treenode* pred=iop(root);
+            root->val=pred->val;
+            root->left=deletenode(root->left,pred->val);
+            //as pred is always present in left subtree
+        }
+
+    }
+    else if(root->val<key)  //go right
+    {
+        root->right=deletenode(root->right,key);
+
+    }
+    else if(root->val>key)
+    {
+        root->left=deletenode(root->left,key);
+    }
+    return root;
+}
+int main()
+{
+    Treenode *root = NULL;
+    root = insertbst(root, 10);
+    root = insertbst(root, 8);
+    root = insertbst(root, 2);
+    root = insertbst(root, 4);
+    root = insertbst(root, 6);
+    root = insertbst(root, 5);
+    display(root);
+    bool find=search(root,82);
+    cout<<endl;
+    if(find==true) cout<<"found";
+    else cout<<"not found ";
+    cout<<endl;
+    display(root); cout<<endl;
+    root=deletenode(root,5);
+    display(root); cout<<endl;
+    root=deletenode(root,6);
+    display(root);
+    
+    
+}

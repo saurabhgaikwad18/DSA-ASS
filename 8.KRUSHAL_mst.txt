@@ -1,0 +1,64 @@
+//kruskal's algorithm for MINIMUM SPANNING TREE
+
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+int parent[100];
+int size[100];
+void make(int v)  //vertex
+{
+    parent[v]=v;
+    size[v]=1;
+}
+int find(int v)  //to find parent node
+{
+    if(parent[v]==v) return v;
+    return parent[v]=find(parent[v]); //recursion and path compression
+}
+void UNION(int a,int b)
+{
+    a=find(a);
+    b=find(b);
+    if(a!=b) //veglya component
+    {
+        if(size[a]<size[b]) swap (a,b);
+        parent[b]=a;  //chota tree motya la lavaycha
+        size[a]+=size[b];
+    }
+}
+int main()
+{
+    int n;
+    int m;
+    cout<<"Enter the no of nodes : ";
+    cin>>n;
+    cout<<"Enter the no  of edges : ";
+    cin>>m;
+    vector<pair<int,pair<int,int>>> edges;
+    for(int i=0;i<m;i++)
+    {
+        int u,v,wt;
+        cin>>u>>v>>wt;
+        edges.push_back({wt,{u,v}});
+        edges.push_back({wt,{v,u}});//this step is not req if it is directed graph
+    }//now sort weights 
+    sort(edges.begin(),edges.end()); //default first pair sorted
+    //now make nodes
+    for(int i=0;i<n;i++) 
+    {
+        make(i);
+    }
+int total_cost=0;
+for(auto edge:edges)
+{
+    int wt=edge.first;
+    int u=edge.second.first;
+    int v=edge.second.second;
+    if(find(u)==find(v)) continue;  //jar ekach parent node ahe tr cycle honar
+    UNION(u,v);
+    total_cost+=wt;
+    cout<<u<<" "<<v<<" "<<wt<<endl;
+}
+cout<<total_cost;
+}

@@ -1,0 +1,102 @@
+//TBT IMPLEMENTATION
+// NON RECURSIVE
+#include <iostream>
+using namespace std;
+
+// Node structure for Binary Search Tree
+struct Node
+{
+    int data;
+    Node *left;
+    Node *right;
+    Node(int value)
+    {
+        data = value;
+        left = nullptr;
+        right = nullptr;
+    }
+};
+
+// Function to insert a value into the Binary Search Tree
+Node *insert(Node *root, int value)
+{
+    if (root == nullptr)
+    {
+        return new Node(value);
+    }
+
+    if (value < root->data)
+    {
+        root->left = insert(root->left, value);
+    }
+    else if (value > root->data)
+    {
+        root->right = insert(root->right, value);
+    }
+
+    return root;
+}
+
+// Non-recursive inorder traversal of Binary Search Tree
+void InorderTraversal(Node *root)
+{
+    Node *current = root;
+
+    while (current != nullptr)
+    {
+        if (current->left == nullptr)
+        {
+            cout << current->data << " "; // Process the node (e.g., print its value)
+            current = current->right;
+        }
+        else
+        {
+            // Find the inorder predecessor (rightmost node in the left subtree)
+            Node *predecessor = current->left;
+            while (predecessor->right != nullptr && predecessor->right != current)
+            {
+                predecessor = predecessor->right;
+            }
+
+            // Make current as the right child of its inorder predecessor
+            if (predecessor->right == nullptr)
+            {
+                predecessor->right = current;
+                current = current->left;
+            }
+            else
+            {
+                // Revert the changes made in the if branch (fix the threaded link)
+                predecessor->right = nullptr;
+
+                cout << current->data << " "; // Process the node (e.g., print its value)
+                current = current->right;
+            }
+        }
+    }
+}
+
+// Example usage with user input
+int main()
+{
+    Node *root = nullptr;
+
+    // Taking user input for constructing Binary Search Tree
+    cout << "Enter values to insert into the Binary Search Tree (enter -1 to stop):" << endl;
+    int value;
+    while (true)
+    {
+        cin >> value;
+        if (value == -1)
+        {
+            break;
+        }
+        root = insert(root, value);
+    }
+
+    // Perform inorder traversal
+    cout << "Inorder Traversal : ";
+    InorderTraversal(root);
+
+    return 0;
+}

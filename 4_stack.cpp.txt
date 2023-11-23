@@ -1,0 +1,99 @@
+//stack  using linkedlist
+//here push means insert at head
+//here pop means delete at head
+//head and top should be on first element
+#include<iostream>
+using namespace std;
+class node
+{
+    public:
+    int value;
+    node* next;
+    node(int data)
+    {
+    value=data;
+    next=NULL;
+    }
+};
+class stack
+{
+    public:
+    int capacity;
+    int curr_size;
+    node* head;
+    stack(int c)
+    {
+        capacity=c;
+        curr_size=0;
+        head=NULL;
+    }
+    void push(int value)            //insert at head
+    {
+        if(curr_size==capacity)
+        {
+            cout<<"Overflow "<<endl;
+            return;
+        }
+       
+        node* new_node=new node(value);
+        new_node->next=head;
+        head=new_node;
+        curr_size++;
+        return;
+    }
+    void pop()                     //delete at head
+    {
+        if(curr_size==0)
+        {
+            cout<<"Underflow"<<endl;
+            return;
+        }
+        node* temp=head;
+        head=head->next;
+        free(temp);
+        curr_size--;
+        return;
+    }
+    bool isempty()
+    {
+        return head==NULL;
+    }
+    bool isfull()
+    {
+        return curr_size==capacity;
+    }
+    int gettop()
+    {
+        if(head==NULL)
+        {
+            cout<<"Underflow";
+            return INT_FAST16_MIN;
+        }
+        return head->value;
+    }
+    int getsize()
+    {
+        return curr_size;
+    }
+};
+int main()
+{
+    stack st(5);
+    st.push(1);
+    st.push(2);
+    st.push(4);
+    cout<<st.getsize()<<endl;
+    cout<<st.gettop()<<endl;
+    st.push(3);
+    st.pop();
+    
+    st.pop();
+  
+    cout<<st.isempty()<<endl;
+    cout<<st.isfull()<<endl;
+    while(not st.isempty())
+    {
+        cout<<st.gettop()<<endl;
+        st.pop();
+    }
+}

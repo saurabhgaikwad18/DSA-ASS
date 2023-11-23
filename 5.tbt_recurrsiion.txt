@@ -1,0 +1,124 @@
+//tbt
+// RECURSIVE
+#include <iostream>
+
+using namespace std;
+
+// Node structure for the threaded binary tree
+struct Node
+{
+    int data;
+    Node *left;
+    Node *right;
+    bool lbit; // left threading bit
+    bool rbit; // right threading bit
+};
+
+// Function to create a new node
+Node *createNode(int data)
+{
+    Node *newNode = new Node;
+    newNode->data = data;
+    newNode->left = nullptr;
+    newNode->right = nullptr;
+    newNode->lbit = false;
+    newNode->rbit = false;
+    return newNode;
+}
+
+// Function to insert a node in the threaded binary tree
+Node *insertNode(Node *root, int data)
+{
+    if (root == nullptr)
+    {
+        return createNode(data);
+    }
+
+    if (data < root->data)
+    {
+        root->left = insertNode(root->left, data);
+    }
+    else if (data > root->data)
+    {
+        root->right = insertNode(root->right, data);
+    }
+
+    return root;
+}
+
+// Function to perform in-order traversal using threads
+void inorderTraversal(Node *root)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+
+    inorderTraversal(root->left);
+    cout << root->data << " ";
+    inorderTraversal(root->right);
+}
+
+// Function to perform pre-order traversal
+void preOrderTraversal(Node *root)
+{
+    if (root != nullptr)
+    {
+        cout << root->data << " ";
+        if (!root->lbit)
+        {
+            preOrderTraversal(root->left);
+        }
+        if (!root->rbit)
+        {
+            preOrderTraversal(root->right);
+        }
+    }
+}
+
+// Function to perform post-order traversal
+void postOrderTraversal(Node *root)
+{
+    if (root != nullptr)
+    {
+        if (!root->lbit)
+        {
+            postOrderTraversal(root->left);
+        }
+        if (!root->rbit)
+        {
+            postOrderTraversal(root->right);
+        }
+        cout << root->data << " ";
+    }
+}
+
+int main()
+{
+    Node *root = nullptr;
+    int n, data;
+
+    cout << "Enter the number of nodes: ";
+    cin >> n;
+
+    cout << "Enter the data for each node:\n";
+    for (int i = 0; i < n; ++i)
+    {
+        cin >> data;
+        root = insertNode(root, data);
+    }
+
+    cout << "In-order traversal: ";
+    inorderTraversal(root);
+    cout << endl;
+
+    cout << "Pre-order traversal: ";
+    preOrderTraversal(root);
+    cout << endl;
+
+    cout << "Post-order traversal: ";
+    postOrderTraversal(root);
+    cout << endl;
+
+    return 0;
+}

@@ -1,0 +1,60 @@
+#include<iostream>
+#include<unordered_map>
+#include<list>
+#include<queue>
+using namespace std;
+class graph
+{
+    unordered_map<int,list<int>> l;
+    public:
+     void addedge(int u, int v, bool direction)  //crate adjacency list
+    {
+        // direction 0 undirected ,1:directed graph
+        // create edge from u to v;
+        l[u].push_back(v);
+        if (direction == 0)
+        {
+            // create edge v to u
+            l[v].push_back(u);
+        }
+    }
+    void bfs(int src)   //source root
+    {
+       unordered_map<int,bool>visited;
+    //    mark all the false in visited array
+       for(auto p:l)
+       {
+        int node=p.first;
+        visited[node]=false;
+       }
+       queue<int>q;
+       q.push(src);
+       visited[src]=true;  //here we marked value as true 
+       while(!q.empty())
+       {
+        int node=q.front();
+        q.pop();
+        cout<<node<<" ";  //here we printed the value 
+        for(auto i:l[node]) //now i can access all the list values of the respectiev node
+        {
+            if(visited[i]!=true)  //false
+            {
+                q.push(i);
+                visited[i]=true;
+            }
+        }
+       }
+    }
+};
+int main()
+{
+    graph g; 
+      
+    g.addedge(0,1,0);
+    g.addedge(1,2,0);
+    g.addedge(2,3,0);
+    g.addedge(3,4,0);
+    g.addedge(4,5,0);
+    g.bfs(0);
+
+}

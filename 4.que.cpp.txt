@@ -1,0 +1,103 @@
+//push means insert at tail
+//pop means delete at head
+#include<iostream>
+using namespace std;
+class node
+{
+    public:
+    int value;
+    node* next;
+    node(int data)
+    {
+        value=data;
+        next =NULL;
+    }
+};
+class queue
+{
+    public:
+    node* head;
+    node* tail;
+    int curr_size;
+    int capacity;
+    queue(int c)
+{
+    head=NULL;
+    tail=NULL;
+    curr_size=0;
+    capacity=c;
+}
+void enque(int value)  //insert at tail
+{
+   node* new_node=new node(value);
+   if(head==NULL)
+   {
+    head=new_node;
+    tail=new_node;
+   }
+
+   tail->next=new_node;
+   tail=new_node;
+   
+   curr_size++;
+}
+void deque()        //delete at head
+{
+    if(head==NULL)  //if empty
+    {
+        return;
+    }
+
+    node* temp=head;
+    head=head->next;
+    if(head==NULL)
+    {
+        tail=NULL;
+    }
+    free(temp);
+
+curr_size--;
+}
+bool isempty()
+{
+    return head==NULL;
+}
+bool isfull()
+{
+    return curr_size==capacity; 
+}
+int front()
+{
+    if(head==NULL)
+    {
+        return INT16_MIN;
+    }
+    return head->value;
+}
+int getsize()
+{
+    return curr_size;
+}
+};
+int main()
+{
+   queue qu(5);         // 1 2 3 4 5
+   qu.enque(1);
+   qu.enque(2);
+   qu.enque(3);
+   qu.enque(4);
+   qu.enque(5);
+   qu.deque();
+   qu.deque();         //3 4 5
+  
+   cout<<qu.front()<<endl;
+   cout<<qu.getsize()<<endl;
+   cout<<qu.isfull()<<endl;
+   cout<<qu.isempty()<<endl;
+   cout<<"The queue is "<<endl;     //now queue is printed
+   while(not qu.isempty())
+   {
+    cout<<qu.front()<<" ";
+    qu.deque();
+   }
+}
