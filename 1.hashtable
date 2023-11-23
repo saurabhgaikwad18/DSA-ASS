@@ -1,0 +1,74 @@
+#include <iostream>
+#include <string.h>
+using namespace std;
+
+class employee
+{
+public:
+    int id;
+    string name;
+};
+
+int main()
+{
+    employee arr[10];   // this is the main array
+    employee values[5]; // for storing key this array is used
+    int flag = 0;
+    for (int i = 0; i < 5; i++)
+    {
+        cout << "Enter the id of employee ";
+        cin >> values[i].id;
+        cout << "Enter the name of employee ";
+        cin >> values[i].name;
+    }
+    // initialise all main array id by -1
+    for (int i = 0; i < 10; i++)
+    {
+        arr[i].id = -1;
+    }
+    // integer b for storing memory index for the main array
+
+    for (int i = 0; i < 5; i++)
+    {
+        int b=values[i].id%10;
+        int initialindex = b;
+        //linear collision if slot is already filled or other value is filled
+        while (arr[b].id != -1 && arr[b].id != values[i].id)
+        {
+            b = (b + 1) % 10;
+            if(b==initialindex)   //parta firun titech ala
+            {
+                cout<<"The table is full ";
+                return 0;
+            }
+        }
+        arr[b].id=values[i].id;
+        arr[b].name=values[i].name;
+    }
+
+    cout << "\n\t\t\tHash Table";
+    cout << endl;
+    cout << "arrinx"
+         << "   "
+         << "value" << endl;
+    for (int i = 0; i < 10; i++)
+    {
+        cout << i << "        " << arr[i].id << endl;
+    }
+    cout << endl;
+    cout << endl;
+    cout << "Enter the id to search ";
+    int key;
+    cin >> key;
+    for (int i = 0; i < 10; i++)
+    {
+        if (key == arr[i].id)
+        {
+            cout << "id is " << arr[i].id << endl;
+            cout << "Name is " << arr[i].name << endl;
+            flag++;
+        }
+    }
+    if (flag == 0)
+        cout << "Not found ";
+}
